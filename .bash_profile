@@ -1,5 +1,15 @@
+
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH";
+export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH";
+export PATH="$(brew --prefix homebrew/php/php55)/bin:$PATH";
+export PATH="/usr/local/sbin:$PATH"
+#export PATH="/usr/local/share/python:$PATH";
+
+#Android SDK
+export ANDROID_HOME="/usr/local/Cellar/android-sdk/24.4.1_1"
+export PATH=$PATH:$ANDROID_HOME/bin
+export JAVA_HOME=$(/usr/libexec/java_home)
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
@@ -46,3 +56,26 @@ complete -W "NSGlobalDomain" defaults;
 
 # Add `killall` tab completion for common apps
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall;
+PHP_AUTOCONF="/usr/local/bin/autoconf"
+
+# launch a webserver in the current folder, defaults to 8000
+webserver()
+{
+	python -m SimpleHTTPServer ${1:-8000}
+}
+
+# get the IP address of a given interface, defaults to en0
+getip()
+{
+	/sbin/ifconfig ${1:-en0} | awk '/inet / {print $2}';
+}
+
+# cd to the path of the front Finder window
+cdf() {
+	target=`osascript -e 'tell application "Finder" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)'`
+	if [ "$target" != "" ]; then
+		cd "$target"; pwd
+	else
+		echo 'No Finder window found' >&2
+	fi
+}
